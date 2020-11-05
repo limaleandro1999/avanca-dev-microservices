@@ -2,11 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
-	"text/template"
+	"os"
 
 	"github.com/hashicorp/go-retryablehttp"
 )
@@ -22,14 +23,16 @@ func main() {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	t := template.Must(template.ParseFiles("D:\\projects\\microservices\\checkout\\templates\\home.html"))
+	curretDirectory, _ := os.Getwd()
+	t := template.Must(template.ParseFiles(curretDirectory + "/checkout/templates/home.html"))
 	t.Execute(w, Result{})
 }
 
 func process(w http.ResponseWriter, r *http.Request) {
 	result := makeHttpCall("http://localhost:9091", r.FormValue("coupon"), r.FormValue("cc-number"))
 
-	t := template.Must(template.ParseFiles("D:\\projects\\microservices\\checkout\\templates\\home.html"))
+	curretDirectory, _ := os.Getwd()
+	t := template.Must(template.ParseFiles(curretDirectory + "/checkout/templates/home.html"))
 	t.Execute(w, result)
 }
 

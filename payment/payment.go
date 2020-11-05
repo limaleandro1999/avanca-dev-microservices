@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 type Result struct {
@@ -57,7 +59,10 @@ func makeHttpCall(urlMicroservice string, coupon string) (Result, error) {
 	values := url.Values{}
 	values.Add("coupon", coupon)
 
-	res, err := http.PostForm(urlMicroservice, values)
+	retryClient := retryablehttp.NewClient()
+	retryClient.RetryMax = 5
+
+	res, err := retryClient.PostForm(urlMicroservice, values)
 	if err != nil {
 		return Result{}, errors.New("Servidor fora do ar!")
 	}
