@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+  rabbit:
+    image: "rabbitmq:3-management"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  checkout:
+    build: ./checkout/
+    ports:
+      - "9090:9090"
+    depends_on:
+      - "rabbit"
+
+  payment:
+    build: ./payment/
+    ports:
+      - "9091:9091"
+    depends_on:
+      - "rabbit"
+  
+  coupon:
+    build: ./coupon/
+    ports:
+      - "9092:9092"

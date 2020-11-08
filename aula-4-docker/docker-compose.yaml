@@ -1,0 +1,15 @@
+version: '3'
+
+services: 
+
+  payment:
+    build: .
+    ports: 
+      - 9091:9091
+  
+  nginx:
+    image: nginx
+    volumes: 
+      - ./nginx:/usr/share/nginx/html/
+    ports: 
+      - 8080:80
